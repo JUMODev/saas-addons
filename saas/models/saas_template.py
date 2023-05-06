@@ -71,6 +71,9 @@ class SAASTemplate(models.Model):
             self.operator_ids.write({'to_rebuild': True})
         return super(SAASTemplate, self).write(vals)
 
+    def prepare(self):
+        return self.operator_ids.sudo()._prepare_template()
+
     def action_create_build(self):
         self.ensure_one()
         if any([rec.state == 'done' for rec in self.operator_ids]):
@@ -175,12 +178,11 @@ class SAASTemplateLine(models.Model):
                     'type': 'template',
                 })
             self.env['saas.log'].log_db_creating(r.operator_db_id)
-
             r.write({
                 'state': 'creating',
             })
             r.flush()
-            r.operator_db_id.with_delay().create_db(
+            r.operator_db_id.create_db(
                 None,
                 r.template_id.template_demo,
                 callback_obj=r,
@@ -190,7 +192,7 @@ class SAASTemplateLine(models.Model):
         self.ensure_one()
         self.to_rebuild = False
         self.state = 'installing_modules'
-        self.operator_id.with_delay().install_modules(self.template_id, self)
+        self.operator_id.install_modules(self.template_id, self)
 
     def prepare_name(self, db_name):
         self.ensure_one()

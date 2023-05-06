@@ -22,6 +22,7 @@
             <form>
                 <header>
                     <button name="action_create_build" type="object" string="Create Build" class="oe_read_only"/>
+                    <button name="prepare" type="object" string="Prepare"/>
                 </header>
                 <sheet>
                     <group>

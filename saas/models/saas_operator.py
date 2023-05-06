@@ -76,7 +76,7 @@ class SAASOperator(models.Model):
         modules = [('name', 'in', self.get_mandatory_modules() + modules)]
         self._install_modules(template_operator_id.operator_db_name, modules)
         template_operator_id.state = 'post_init'
-        self.with_delay().post_init(template_id, template_operator_id)
+        self.post_init(template_id, template_operator_id)
 
     def _post_init(self, db_name, template_post_init):
         if self.type != 'local':
